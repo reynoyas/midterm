@@ -1,0 +1,14 @@
+{
+  "name": "yreynoso/328/midterm",
+  "description": "Midterm",
+  "license": "open source",
+  "authors": [
+    {
+      "name": "yasairareynoso",
+      "email": "reynoso.yasaira@student.greenriver.edu"
+    }
+  ],
+  "require": {
+    "bcosca/fatfree-core": "dev-master"
+  }
+}
