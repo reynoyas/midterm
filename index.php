@@ -9,6 +9,7 @@ session_start();
 
 // Require the autoload file
 require_once ('vendor/autoload.php');
+require('model/data-layer.php');
 
 // Create an instance of the Base class
 $f3 = Base::instance();
@@ -20,9 +21,11 @@ $f3->route('GET /', function (){
 });
 
 // Define a survey route
-$f3->route('GET /survey', function (){
+$f3->route('GET|POST /survey', function ($f3){
+    $f3->set('choices', getChoices());
+
     $view = new Template();
-    echo $view->render('views/home.html');
+    echo $view->render('views/survey.html');
 });
 
 // Run fat-free
