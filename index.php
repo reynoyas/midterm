@@ -10,6 +10,7 @@ session_start();
 // Require the autoload file
 require_once ('vendor/autoload.php');
 require('model/data-layer.php');
+require('model/validation.php');
 
 // Create an instance of the Base class
 $f3 = Base::instance();
@@ -24,18 +25,40 @@ $f3->route('GET /', function (){
 $f3->route('GET|POST /survey', function ($f3){
     $f3->set('choices', getChoices());
 
+    // Initialize variables
+    $fname = "";
+
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
-        $_SESSION['fname'] = $_POST['fname'];
-        $_SESSION['choices'] = $_POST['choices'];
+        $fname = $_POST['fname'];
 
-        // If condiments were selected
-        if(isset($_POST['choices'])){
-            $_SESSION['choices'] = implode(", ",$_POST['choices']);
+        // Name
+        if(validName($fname)) {
+            $_SESSION['fname'] = $_POST['fname'];
+        } else {
+            $f3->set('errors["fname"]', '*Required');
         }
-        // Redirect the user to next page
-        $f3->reroute('summary');
+
+        // Choices
+        if (isset($_POST['choices'])) {
+            $choices = $_POST['choices'];
+            //If choices are valid
+            if (validChoices($choices)) {
+                $choices = implode(", ", $_POST['choices']);
+            }
+            else {
+                $f3->set("errors['choice']", "*Invalid selection");
+            }
+        }
+
+        // Redirect user to next page if there are no errors
+        if(empty($f3->get('errors'))){
+            $_SESSION['choices'] = $choices;
+            $f3->reroute('summary');
+        }
     }
+
+    $f3->set('fname', $fname);
 
     $view = new Template();
     echo $view->render('views/survey.html');

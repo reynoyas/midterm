@@ -12,14 +12,26 @@
     <div class="container">
         <form action="#" method="post">
         <h2>Midterm Survey</h2><br>
-        <label for="fname">Name</label>
-        <input type="text" name="fname" id="fname" value="{{ @fname }}"><br>
 
+            <label for="fname">Name</label>
+            <!-- Display an error if there is one -->
+            <check if="{{ isset(@errors['fname']) }}">
+                <span class="err">{{ @errors['fname'] }}</span>
+            </check>
+            <input type="text" class="form-control" name="fname"
+                   id="fname" value="{{ @fname }}">
         <br>
-        <label>Check all that apply:</label><br>
-            <repeat group="{{ @choices }}" value="{{ @choices }}">
-                <label><input type="checkbox" name="choices[]" value="{{ @choices }}">
-                    {{ @choices }}</label><br>
+
+        <label>Check all that apply:</label>
+            <!-- Display an error if there is one -->
+            <check if="{{ isset(@errors['choices']) }}">
+                <span class="err">{{ @errors['choices'] }}</span>
+            </check>
+
+            <br>
+            <repeat group="{{ @choices }}" value="{{ @choice }}">
+                <label><input type="checkbox" name="choices[]" value="{{ @choice }}">
+                    {{ @choice }}</label><br>
             </repeat>
 
         <div>
